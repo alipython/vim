@@ -105,10 +105,11 @@ imap <leader>' ''<ESC>i
 
 autocmd BufNewFile *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetHead()"
 autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetUpdateTime()"
-autocmd BufNewFile * normal G
-
+"set cursor to th end
+autocmd BufNewFile * normal G 
 
 func SetHead()
+"custom head
     if  &filetype == 'python'
 	call setline(1,"# -*-coding:utf-8-*-")
 	call append(line("."),"")
@@ -147,10 +148,12 @@ func SetHead()
 	call append(line(".")+7,"\****************************************/")
 	call append(line(".")+8,"")
     endif
+    exec "normal G"
 endfunc
 
 
 func SetUpdateTime()
+"Updat Modified time
     call cursor(12,1)
     let cur_time = strftime("%Y-%m-%d %H:%M:%S")
     if search ('Last Modified') != 0
@@ -159,3 +162,6 @@ func SetUpdateTime()
    endif
     call setline(num,line)
 endfunc
+
+
+
