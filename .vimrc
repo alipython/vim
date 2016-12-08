@@ -41,6 +41,8 @@ set nu "Enable Line numer
 syntax enable
 
 set ruler
+highlight StatusLine guifg=SlateBlue guibg=Yellow
+highlight StatusLineNC guifg=Gray guibg=White
 
 "autocmd InsertEnter * se cul
 
@@ -50,6 +52,7 @@ set list lcs=tab:\|\
 
 set nobackup
 
+set showmatch
 
 set encoding=utf-8
 
@@ -82,6 +85,10 @@ set showcmd
 filetype off
 
 filetype indent on
+
+set nobackup
+
+set nowritebackup
 
 "******************************
 "Plugin
@@ -143,6 +150,8 @@ filetype indent on
 "==============================
 
 imap <leader>' ''<ESC>i
+map <F5> :call CompileRunSimpleCpp()<CR>
+imap <F5> <ESC>:call CompileRunSimpleCpp()<CR>
 
 "==============================
 "Funciton
@@ -206,6 +215,12 @@ func SetUpdateTime()
 	let line =  substitute(getline(num),'\d\{4\}-.*', ''.cur_time ,'g') 
    endif
     call setline(num,line)
+endfunc
+
+func! CompileRunSimpleCpp()
+    exec "w"
+    exec "!g++ -std=c++11 % -o %<"
+    exec "! ./%<"
 endfunc
 
 
