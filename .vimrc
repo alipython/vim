@@ -16,7 +16,7 @@ iabbr "**  "******************************
 
 set gfn=Consolas:h14 "font
 
-color evening "theme
+color ron "theme
 
 "==============================
 "close compatible
@@ -48,7 +48,7 @@ highlight StatusLineNC guifg=Gray guibg=White
 
 set novisualbell
 
-set list lcs=tab:\|\
+set lcs=tab:\|\ ,nbsp:%,trail:-
 
 set nobackup
 
