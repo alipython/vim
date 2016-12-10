@@ -1,4 +1,4 @@
-"******************************
+"*****************************
 "Common Used Config.
 "******************************
 
@@ -110,28 +110,12 @@ set nowritebackup
  " alternatively, pass a path where Vundle should install plugins
  "call vundle#begin('~/some/path/here')
  Plugin 'bling/vim-airline'
- " let Vundle manage Vundle, required
  Plugin 'VundleVim/Vundle.vim'
- " The following are examples of different formats supported.
- " Keep Plugin commands between vundle#begin/end.
- " plugin on GitHub repo
- "Plugin 'tpope/vim-fugitive'
- " plugin from http://vim-scripts.org/vim/scripts.html
- "Plugin 'L9'
- " Git plugin not hosted on GitHub
- "Plugin 'git://git.wincent.com/command-t.git'
- " git repos on your local machine (i.e. when working on your own plugin)
  "Plugin 'file:///home/gmarik/path/to/plugin'
  Plugin 'scrooloose/nerdtree'
- 
- 
- " The sparkup vim script is in a subdirectory of this repo called vim.
- " Pass the path to set the runtimepath properly.
- "Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
- " Install L9 and avoid a Naming conflict if you've already installed a
- " different version somewhere else.
- "Plugin 'ascenator/L9', {'name': 'newL9'}
  "All of your Plugins must be added before the following line
+ 
+
  call vundle#end()            " required
  filetype plugin indent on    " required
  " To ignore plugin indent changes, instead use:
@@ -166,12 +150,14 @@ set laststatus=2
 let mapleader = ','
 
 " compile and run
-map <F5> :call CompileRunSimpleCpp()<CR>
-imap <F5> <ESC>:call CompileRunSimpleCpp()<CR>
-map <F9> :call Markp()<CR>
+map <F5> :call CompileRun()<CR>
+imap <F5> <ESC>:call CompileRun()<CR>
+
 "+++plugin
 "+ nerdtree
 map <leader>f :NERDTree<CR>
+map <leader>i :call InsertCplusHeader()<CR>
+
 
 
 
@@ -182,17 +168,17 @@ map <leader>f :NERDTree<CR>
 "Funciton
 "===============================
 
-autocmd BufNewFile *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetHead()"
-autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetUpdateTime() "
+autocmd BufNewFile *.c,*.cc,*.cpp,*.java,*.sh,*.py,*.mos exec ":call SetHead()"
+autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py,*.mos exec ":call SetUpdateTime() "
 "set cursor to th end
-autocmd BufNewFile * normal G 
+autocmd BufNewFile * exec ":call NewFileCheck()" 
 
 func SetHead()
 "custom head
     if  &filetype == 'python'
-	call setline(1,"# -*-coding:utf-8-*-")
-	call append(line("."),"")
-	call append(line(".")+1,"\#######################################")
+	call setline(1,"# vim filetype=python")
+	call append(line("."),"# -*-coding:utf-8-*-")
+	call append(line(".")+1,"\# **************************************")
 	call append(line(".")+2,"\# ")
 	call append(line(".")+3,"\# @Author         Noxaean")
 	call append(line(".")+4,"\# @Email          noxaean@gmail.com")
@@ -200,12 +186,12 @@ func SetHead()
 	call append(line(".")+6,"\# @Created        ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+7,"\# @Last Modified  ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+8,"\# ")
-	call append(line(".")+9,"\#######################################")
+	call append(line(".")+9,"\# **************************************")
 	call append(line(".")+10,"")
     elseif &filetype == 'sh'
-	call setline(1,"#! /bin/bash")
-	call append(line("."),"")
-	call append(line(".")+1,"\#######################################")
+	call setline(1,"# vim filetype=sh")
+	call append(line("."),"#! /bin/bash")
+	call append(line(".")+1,"\# **************************************")
 	call append(line(".")+2,"\# ")
 	call append(line(".")+3,"\# @Author         Noxaean")
 	call append(line(".")+4,"\# @Email          noxaean@gmail.com")
@@ -213,10 +199,28 @@ func SetHead()
 	call append(line(".")+6,"\# @Created        ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+7,"\# @Last Modified  ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+8,"\# ")
-	call append(line(".")+9,"\#######################################")
+	call append(line(".")+9,"\# **************************************")
 	call append(line(".")+10,"")
+    elseif expand("%:e") == 'mos'
+	call setline(1,"# vim filetype=moshell ")
+	call append(line(".")," ")
+	call append(line(".")+1,"\# **************************************")
+	call append(line(".")+2,"\# ")
+	call append(line(".")+3,"\# @Author         Noxaean")
+	call append(line(".")+4,"\# @Email          noxaean@gmail.com")
+	call append(line(".")+5,"\# @Description  ")
+	call append(line(".")+6,"\# @Created        ".strftime("%Y-%m-%d %H:%M:%S"))
+	call append(line(".")+7,"\# @Last Modified  ".strftime("%Y-%m-%d %H:%M:%S"))
+	call append(line(".")+8,"\# ")
+	call append(line(".")+9,"\# **************************************")
+	call append(line(".")+10,"confb+")
+	call append(line(".")+11,"gs+")
+	call append(line(".")+12,"lt all")
+	call append(line(".")+13," ")
+	call append(line(".")+14,"gs- ")
+	call append(line(".")+15,"confb-")
     else
-	call setline(1,"/**************************************")
+	call setline(1,"/* *************************************")
 	call append(line("."),"\*")
 	call append(line(".")+1,"\* @Author         Noxaean")
 	call append(line(".")+2,"\* @Email          noxaean@gmail.com")
@@ -224,7 +228,7 @@ func SetHead()
 	call append(line(".")+4,"\* @Created        ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+5,"\* @Last Modified  ".strftime("%Y-%m-%d %H:%M:%S"))
 	call append(line(".")+6,"\*")
-	call append(line(".")+7,"\****************************************/")
+	call append(line(".")+7,"\* ****************************************/")
 	call append(line(".")+8,"")
     endif
     exec "normal G"
@@ -238,17 +242,46 @@ func SetUpdateTime()
     call cursor(1,1)
     if search ('Last Modified','w',30) != 0
 	let l:line =  substitute(getline(line(".")),'\d\{4\}-.*', ''.l:time ,'g') 
-    call setline(l:num,l:line)
-   endif
+	call setline(line("."),l:line)
+    endif
     call cursor(l:pos)
 endfunc
 
-func! CompileRunSimpleCpp()
+func! CompileRun()
     exec "w"
-    exec "!g++ -std=c++11 % -o %<"
-    exec "! ./%<"
+    if &filetype == 'python'
+	exec "!python %"
+    elseif &filetype == 'sh'
+	exec "!./%"
+    else
+	call CompileRunCpp()
+    endif
 endfunc
 
-func Markp()
-    exec "mp"
+func! CompileRunCpp()
+    let l:file = findfile("makefile",".")
+    if l:file == "makefile"
+	exec "!make && ./main"
+    else
+	exec "!g++ -std=c++11 % -o %< && ./%< "
+    endif
 endfunc
+
+func! InsertCplusHeader()
+    call setline(line("."),"#include <iostream>")
+    call append(line(".")," ")
+    call append(line(".")+1,"using namespace std;")
+    call cursor(line(".")+2,col("."))
+endfunc
+
+func NewFileCheck()
+    if expand("%:e") != 'mos'
+	normal G
+    else 
+	call search ('gs-') 
+	call cursor (line(".")-1,0)
+    endif
+endfunc
+
+
+
