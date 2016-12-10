@@ -16,7 +16,7 @@ iabbr "**  "******************************
 
 set gfn=Consolas:h14 "font
 
-color ron "theme
+"color ron "theme
 
 "==============================
 "close compatible
@@ -78,6 +78,12 @@ set noexpandtab
 
 set showcmd
 
+"==============================
+"tags
+"==============================
+"set tag=tag_list
+"set tags=$PWD/tags
+":tag func
 
 "==============================
 "files 
@@ -103,21 +109,21 @@ set nowritebackup
  call vundle#begin()
  " alternatively, pass a path where Vundle should install plugins
  "call vundle#begin('~/some/path/here')
-
+ Plugin 'bling/vim-airline'
  " let Vundle manage Vundle, required
  Plugin 'VundleVim/Vundle.vim'
  " The following are examples of different formats supported.
  " Keep Plugin commands between vundle#begin/end.
  " plugin on GitHub repo
- Plugin 'tpope/vim-fugitive'
+ "Plugin 'tpope/vim-fugitive'
  " plugin from http://vim-scripts.org/vim/scripts.html
  "Plugin 'L9'
  " Git plugin not hosted on GitHub
- Plugin 'git://git.wincent.com/command-t.git'
+ "Plugin 'git://git.wincent.com/command-t.git'
  " git repos on your local machine (i.e. when working on your own plugin)
  "Plugin 'file:///home/gmarik/path/to/plugin'
  Plugin 'scrooloose/nerdtree'
-
+ 
  
  " The sparkup vim script is in a subdirectory of this repo called vim.
  " Pass the path to set the runtimepath properly.
@@ -141,6 +147,15 @@ set nowritebackup
  "
  " see :h vundle for more details or wiki for FAQ
  " Put your non-Plugin stuff after this lin
+
+"==============================
+"airline
+"==============================
+let g:airline_right_sep=''
+set laststatus=2
+
+
+
 "************************************
 "Custom 
 "************************************
@@ -148,17 +163,27 @@ set nowritebackup
 "==============================
 "key mapping
 "==============================
+let mapleader = ','
 
-imap <leader>' ''<ESC>i
+" compile and run
 map <F5> :call CompileRunSimpleCpp()<CR>
 imap <F5> <ESC>:call CompileRunSimpleCpp()<CR>
+map <F9> :call Markp()<CR>
+"+++plugin
+"+ nerdtree
+map <leader>f :NERDTree<CR>
+
+
+
+
+
 
 "==============================
 "Funciton
 "===============================
 
 autocmd BufNewFile *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetHead()"
-autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetUpdateTime()"
+autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py exec ":call SetUpdateTime() "
 "set cursor to th end
 autocmd BufNewFile * normal G 
 
@@ -208,13 +233,14 @@ endfunc
 
 func SetUpdateTime()
 "Updat Modified time
-    call cursor(12,1)
-    let cur_time = strftime("%Y-%m-%d %H:%M:%S")
-    if search ('Last Modified') != 0
-	let num = line('.')
-	let line =  substitute(getline(num),'\d\{4\}-.*', ''.cur_time ,'g') 
+    let l:pos = [line("."),col(".")]
+    let l:time = strftime("%Y-%m-%d %H:%M:%S")
+    call cursor(1,1)
+    if search ('Last Modified','w',30) != 0
+	let l:line =  substitute(getline(line(".")),'\d\{4\}-.*', ''.l:time ,'g') 
+    call setline(l:num,l:line)
    endif
-    call setline(num,line)
+    call cursor(l:pos)
 endfunc
 
 func! CompileRunSimpleCpp()
@@ -223,5 +249,6 @@ func! CompileRunSimpleCpp()
     exec "! ./%<"
 endfunc
 
-
-
+func Markp()
+    exec "mp"
+endfunc
