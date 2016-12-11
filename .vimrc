@@ -48,7 +48,7 @@ highlight StatusLineNC guifg=Gray guibg=White
 
 set novisualbell
 
-set lcs=tab:\|\ ,nbsp:%,trail:-
+set lcs=tab:\|\ ,nbsp:%,trail:-,eol:ך
 
 set nobackup
 
@@ -152,11 +152,13 @@ let mapleader = ','
 " compile and run
 map <F5> :call CompileRun()<CR>
 imap <F5> <ESC>:call CompileRun()<CR>
-
+map <F2> :mksession!  ./session.vim
+map <F3> :call Annotaion()<CR>
 "+++plugin
 "+ nerdtree
 map <leader>f :NERDTree<CR>
 map <leader>i :call InsertCplusHeader()<CR>
+
 
 
 
@@ -259,8 +261,8 @@ func! CompileRun()
 endfunc
 
 func! CompileRunCpp()
-    let l:file = findfile("makefile",".")
-    if l:file == "makefile"
+    let l:file = findfile("Makefile",".")
+    if l:file == "Makefile"
 	exec "!make && ./main"
     else
 	exec "!g++ -std=c++11 % -o %< && ./%< "
@@ -281,6 +283,17 @@ func NewFileCheck()
 	call search ('gs-') 
 	call cursor (line(".")-1,0)
     endif
+endfunc
+
+
+func Annotaion()
+    call append(line("."),"\/*")
+    call append(line(".")+1,"\* ")
+    call append(line(".")+2,"\* ")
+    call append(line(".")+3,"\*/")
+    call append(line(".")+4," ")
+    normal =ap
+    call cursor(line(".")+3,100)
 endfunc
 
 
