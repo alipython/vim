@@ -1,7 +1,7 @@
 "*****************************
 "Common Used Config.
 "******************************
-
+set backspace=indent,eol,start
 
 "==============================
 "personal info
@@ -14,8 +14,8 @@ iabbr "**  "******************************
 "Font and BackGround
 "==============================
 
-set gfn=Consolas:h14 "font
-
+"/set gfn=Consolas:h14 "font
+set guifont=Powerline:h14
 "color ron "theme
 
 "==============================
@@ -45,10 +45,11 @@ highlight StatusLine guifg=SlateBlue guibg=Yellow
 highlight StatusLineNC guifg=Gray guibg=White
 
 "autocmd InsertEnter * se cul
+au BufWrite * :Autoformat
 
 set novisualbell
 
-set lcs=tab:\|\ ,nbsp:%,trail:-,eol:ך
+set lcs=tab:\|\ ,nbsp:%,trail:-
 
 set nobackup
 
@@ -56,8 +57,9 @@ set showmatch
 
 set encoding=utf-8
 
-set fileencoding=utf-8
-
+"set fileencoding=utf-8
+set fileencoding=gb18030
+set fileencodings=utf-8,gb18030,utf-16,big5
 "==============================
 "indent
 "==============================
@@ -86,7 +88,7 @@ set showcmd
 ":tag func
 
 "==============================
-"files 
+"files
 "==============================
 filetype off
 
@@ -104,44 +106,51 @@ set nowritebackup
 " git clone https://github.com/VundleVim/Vundle.vim.git
 " ~/.vim/bundle/Vundle.vim
 "==============================
- "set the runtime path to include Vundle and initialize
- set rtp+=~/.vim/bundle/Vundle.vim
- call vundle#begin()
- " alternatively, pass a path where Vundle should install plugins
- "call vundle#begin('~/some/path/here')
- Plugin 'bling/vim-airline'
- Plugin 'VundleVim/Vundle.vim'
- "Plugin 'file:///home/gmarik/path/to/plugin'
- Plugin 'scrooloose/nerdtree'
- "All of your Plugins must be added before the following line
- 
+"set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+Plugin 'bling/vim-airline'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'Chiel92/vim-autoformat'
 
- call vundle#end()            " required
- filetype plugin indent on    " required
- " To ignore plugin indent changes, instead use:
- "filetype plugin on
- "
- " Brief help
- " :PluginList       - lists configured plugins
- " :PluginInstall    - installs plugins; append `!` to update or just
- ":PluginUpdate
- " :PluginSearch foo - searches for foo; append `!` to refresh local cache
- " :PluginClean      - confirms removal of unused plugins; append `!` to
- "auto-approve removal
- "
- " see :h vundle for more details or wiki for FAQ
- " Put your non-Plugin stuff after this lin
+"Plugin 'file:///home/gmarik/path/to/plugin'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Rykka/riv.vim'
+Plugin 'Rykka/InstantRst'
+
+"All of your Plugins must be added before the following line
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just
+":PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to
+"auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this lin
 
 "==============================
 "airline
 "==============================
-let g:airline_right_sep=''
 set laststatus=2
-
+let g:airline_right_sep = '<'
+let g:airline_powerline_fonts = 0
+let g:airline_theme='dark'
+let g:airline_right_sep = '«'
+let g:airline_left_sep = '»'
 
 
 "************************************
-"Custom 
+"Custom
 "************************************
 
 "==============================
@@ -149,6 +158,8 @@ set laststatus=2
 "==============================
 let mapleader = ','
 
+let proj1 = { 'path': '~/Dropbox/rst', }
+let g:riv_projects = [proj1]
 " compile and run
 map <F5> :call CompileRun()<CR>
 imap <F5> <ESC>:call CompileRun()<CR>
@@ -173,10 +184,10 @@ map <leader>i :call InsertCplusHeader()<CR>
 autocmd BufNewFile *.c,*.cc,*.cpp,*.java,*.sh,*.py,*.mos exec ":call SetHead()"
 autocmd BufWritePre,FileWritePRE *.c,*.cc,*.cpp,*.java,*.sh,*.py,*.mos exec ":call SetUpdateTime() "
 "set cursor to th end
-autocmd BufNewFile * exec ":call NewFileCheck()" 
+autocmd BufNewFile * exec ":call NewFileCheck()"
 
 func SetHead()
-"custom head
+    "custom head
     if  &filetype == 'python'
 	call setline(1,"# vim filetype=python")
 	call append(line("."),"# -*-coding:utf-8-*-")
@@ -238,12 +249,12 @@ endfunc
 
 
 func SetUpdateTime()
-"Updat Modified time
+    "Updat Modified time
     let l:pos = [line("."),col(".")]
     let l:time = strftime("%Y-%m-%d %H:%M:%S")
     call cursor(1,1)
     if search ('Last Modified','w',30) != 0
-	let l:line =  substitute(getline(line(".")),'\d\{4\}-.*', ''.l:time ,'g') 
+	let l:line =  substitute(getline(line(".")),'\d\{4\}-.*', ''.l:time ,'g')
 	call setline(line("."),l:line)
     endif
     call cursor(l:pos)
@@ -279,8 +290,8 @@ endfunc
 func NewFileCheck()
     if expand("%:e") != 'mos'
 	normal G
-    else 
-	call search ('gs-') 
+    else
+	call search ('gs-')
 	call cursor (line(".")-1,0)
     endif
 endfunc
